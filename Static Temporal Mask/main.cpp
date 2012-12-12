@@ -8,46 +8,48 @@
 #include <opencv/highgui.h>
 
 using namespace std;
+using namespace cv;
 
 /**
  * @param frameBuffer An ordered list of buffered frames, ordered from oldest to newest.
- * @param temporalMask A grayscale image relative temporal offset at each pixel.
+ * @param mask A grayscale image relative temporal offset at each pixel.
  */
-void generateTimeDistortedImage(vector<IplImage*> frameBuffer, IplImage* temporalMask, IplImage* &result)
-{
-    IplImage* currentFrame;
-    IplImage* currentMask;
-    IplImage* remainingMask;
+void generateTimeDistortedImage(vector<IplImage*> frameBuffer, IplImage* mask, IplImage* &result) {
+	unsigned long bufferSize = frameBuffer.size();
 	
-    unsigned long frameBufferSize = frameBuffer.size();
-    if (frameBufferSize <= 0)
-    {
-        result = cvCreateImage(cvGetSize(temporalMask), IPL_DEPTH_8U, 3);
-    }
-    else
-    {
-        cvCopy(frameBuffer.at(frameBufferSize - 1), result);
+	if (bufferSize < 2) return;
+	
+	int numRows = result->height;
+	int numCols = result->width;
+	int numChannels = result->nChannels;
+	
+	unsigned char *maskData = reinterpret_cast<unsigned char *>(mask->imageData);
+	unsigned char *resultData = reinterpret_cast<unsigned char *>(result->imageData);
+	
+	for (int r = 1; r < numRows; r++) {
+		for (int c = 0; c < numCols; c++) {
+			float fraction = 1 - maskData[c] / 256.0;
+			int index = (bufferSize - 1) * fraction;
+			float remainder = (bufferSize - 1) * fraction - index;
+			
+			for (int ch = 0; ch < numChannels; ch++) {
+				IplImage* frame = frameBuffer[index];
+				unsigned char *frameData = reinterpret_cast<unsigned char *>(frame->imageData);
+				frameData += r * frame->widthStep;
+				
+				IplImage* nextFrame = frameBuffer[index + 1];
+				unsigned char *nextFrameData = reinterpret_cast<unsigned char *>(nextFrame->imageData);
+				nextFrameData += r * nextFrame->widthStep;
+				
+				resultData[c * numChannels + ch] =
+					frameData[c * numChannels + ch] * (1 - remainder)
+					+ nextFrameData[c * numChannels + ch] * remainder;
+			}
+		}
 		
-        if (frameBufferSize > 1)
-        {
-            remainingMask = cvCloneImage(temporalMask);
-            currentMask = cvCreateImage(cvGetSize(temporalMask), IPL_DEPTH_8U, 1);
-			
-            for (int i = 1; i < frameBufferSize; i++)
-            {
-                currentFrame = frameBuffer.at(i);
-				
-                int thresholdValue = (frameBufferSize - i - 1) * 255.0 / frameBufferSize;
-                cvThreshold(remainingMask, currentMask, thresholdValue, 255, CV_THRESH_BINARY);
-                cvThreshold(remainingMask, remainingMask, thresholdValue, 255, CV_THRESH_TOZERO_INV);
-				
-                cvCopy(currentFrame, result, currentMask);
-            }
-			
-            cvReleaseImage(&currentMask);
-            cvReleaseImage(&remainingMask);
-        }
-    }
+		maskData += mask->widthStep;
+		resultData += result->widthStep;
+	}
 }
 
 int main()
@@ -72,9 +74,6 @@ int main()
 	
     timeDistortedImage = cvCreateImage(cvGetSize(temporalMask), IPL_DEPTH_8U, 3);
 	
-	int countDown = 100;
-	clock_t start = clock();
-	
 	while (1)
     {
 		frame = cvQueryFrame(capture);
@@ -95,23 +94,7 @@ int main()
 		
 		// wait for ESC
 		char c = cvWaitKey(33);
-		if (c == 27) break;
-		
-		if (countDown-- == 0) {
-			clock_t end = clock();
-			cout << (end - start) / double(CLOCKS_PER_SEC) * 1000 << endl;
-			// Stats using vector<IplImage>
-			// 40: 4107.83, 4168.72, 4121.06, 4117.42
-			// 100: 5604.56, 5656.11, 5596.79
-			// 200: 5621.92, 5607.9, 5617.33
-			// 400: 5615, 5663.66, 5596.7
-			// Stats using IplImage* []
-			// 40: 4344.55, 4298.69, 4384.42
-			// 100: 5696.81, 5682.44, 5768.08
-			// 200: 5719.12, 5702.07, 5699.46
-			// 400: 5660.77, 5721.98, 5677.49
-		}
-	}
+		if (c == 27) break;	}
 	
 	cvReleaseImage(&temporalMask);
 	cvReleaseCapture(&capture);
