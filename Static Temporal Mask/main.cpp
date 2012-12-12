@@ -62,7 +62,7 @@ int main()
 	IplImage* timeDistortedImage;
 	vector<IplImage*> frameBuffer;
 	
-    CvCapture* capture = cvCreateCameraCapture(0);
+    CvCapture* capture = cvCaptureFromCAM(0);
     //CvCapture* capture = cvCreateFileCapture("clock.avi");
 	
     temporalMaskFile = cvLoadImage("temporal_mask01.jpg");
@@ -71,6 +71,9 @@ int main()
     cvReleaseImage(&temporalMaskFile);
 	
     timeDistortedImage = cvCreateImage(cvGetSize(temporalMask), IPL_DEPTH_8U, 3);
+	
+	int countDown = 100;
+	clock_t start = clock();
 	
 	while (1)
     {
@@ -93,13 +96,27 @@ int main()
 		// wait for ESC
 		char c = cvWaitKey(33);
 		if (c == 27) break;
+		
+		if (countDown-- == 0) {
+			clock_t end = clock();
+			cout << (end - start) / double(CLOCKS_PER_SEC) * 1000 << endl;
+			// Stats using vector<IplImage>
+			// 40: 4107.83, 4168.72, 4121.06, 4117.42
+			// 100: 5604.56, 5656.11, 5596.79
+			// 200: 5621.92, 5607.9, 5617.33
+			// 400: 5615, 5663.66, 5596.7
+			// Stats using IplImage* []
+			// 40: 4344.55, 4298.69, 4384.42
+			// 100: 5696.81, 5682.44, 5768.08
+			// 200: 5719.12, 5702.07, 5699.46
+			// 400: 5660.77, 5721.98, 5677.49
+		}
 	}
 	
-    cvReleaseImage(&temporalMask);
+	cvReleaseImage(&temporalMask);
 	cvReleaseCapture(&capture);
 	cvDestroyWindow(OUT_WINDOW_NAME);
 	
 	return 0;
 }
-
 
