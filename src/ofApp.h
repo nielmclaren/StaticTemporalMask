@@ -18,5 +18,19 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+
+  private:
+    int frameCount;
+    int frameWidth;
+    int frameHeight;
+    int screenWidth;
+    int screenHeight;
+
+    ofVideoGrabber videoGrabber;
+
+    unsigned char* inputPixels;
+    int inputPixelsStartIndex;
+
+    ofImage maskImage;
+    ofImage drawImage;
 };
