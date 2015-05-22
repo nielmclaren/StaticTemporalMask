@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 
+#include "ofxOpenCv.h"
 #include "ofxMacamPs3Eye.h"
 
 class ofApp : public ofBaseApp{
@@ -29,6 +30,9 @@ class ofApp : public ofBaseApp{
     int screenHeight;
     
     ofxMacamPs3Eye videoGrabber;
+    
+    ofxCvColorImage colorImg;
+    ofxCvGrayscaleImage grayscaleImg;
 
     unsigned char* inputPixels;
     int inputPixelsStartIndex;

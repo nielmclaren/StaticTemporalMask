@@ -92,6 +92,18 @@ void ofApp::gotMessage(ofMessage msg){
 
 }
 
-void ofApp::dragEvent(ofDragInfo dragInfo){
-
+void ofApp::dragEvent(ofDragInfo dragInfo) {
+    for (int i = 0; i < dragInfo.files.size(); i++) {
+        string filename = dragInfo.files[i];
+        vector<string> tokens = ofSplitString(filename, ".");
+        string extension = tokens[tokens.size() - 1];
+        if (extension == "bmp" || extension == "jpg" || extension == "png") {
+            maskImage.loadImage(filename);
+            colorImg.setFromPixels(maskImage.getPixels(), maskImage.width, maskImage.height);
+            grayscaleImg.allocate(maskImage.width, maskImage.height);
+            grayscaleImg = colorImg;
+            maskImage.setFromPixels(grayscaleImg.getPixels(), grayscaleImg.width, grayscaleImg.height, OF_IMAGE_GRAYSCALE);
+            maskImage.resize(frameWidth, frameHeight);
+        }
+    }
 }
