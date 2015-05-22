@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 
+#include "ofxMacamPs3Eye.h"
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -25,8 +27,8 @@ class ofApp : public ofBaseApp{
     int frameHeight;
     int screenWidth;
     int screenHeight;
-
-    ofVideoGrabber videoGrabber;
+    
+    ofxMacamPs3Eye videoGrabber;
 
     unsigned char* inputPixels;
     int inputPixelsStartIndex;

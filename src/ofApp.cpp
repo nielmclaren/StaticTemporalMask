@@ -10,7 +10,8 @@ void ofApp::setup(){
   screenHeight = ofGetWindowHeight();
 
   videoGrabber.setVerbose(true);
-  videoGrabber.initGrabber(frameWidth, frameHeight);
+  videoGrabber.setDeviceID(0);
+  videoGrabber.initGrabber(frameWidth, frameHeight, false);
 
   maskImage.loadImage("mask.bmp");
   assert(maskImage.width == frameWidth);

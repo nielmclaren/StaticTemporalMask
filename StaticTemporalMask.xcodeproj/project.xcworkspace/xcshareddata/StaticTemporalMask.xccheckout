@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>0492ED54-0A1C-4AFD-BA73-3C7403E81DFE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>StaticTemporalMask</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>482C0C79002299F7F70E95DC2FD2C395D4ACE97F</key>
+		<string>github.com:danielgm/StaticTemporalMask.git</string>
+		<key>F477E52075B09F975A1F455542C246CE19C19CA2</key>
+		<string>github.com:paulobarcelos/ofxMacamPs3Eye.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>StaticTemporalMask.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>482C0C79002299F7F70E95DC2FD2C395D4ACE97F</key>
+		<string>../..</string>
+		<key>F477E52075B09F975A1F455542C246CE19C19CA2</key>
+		<string>../../../../../addons/ofxMacamPs3Eye</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:danielgm/StaticTemporalMask.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>482C0C79002299F7F70E95DC2FD2C395D4ACE97F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F477E52075B09F975A1F455542C246CE19C19CA2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxMacamPs3Eye</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>482C0C79002299F7F70E95DC2FD2C395D4ACE97F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>StaticTemporalMask</string>
+		</dict>
+	</array>
+</dict>
+</plist>
