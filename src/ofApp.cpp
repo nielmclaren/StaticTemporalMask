@@ -13,14 +13,18 @@ void ofApp::setup(){
   videoGrabber.setDeviceID(0);
   videoGrabber.initGrabber(frameWidth, frameHeight, false);
 
-  maskImage.loadImage("mask.bmp");
-  assert(maskImage.width == frameWidth);
-  assert(maskImage.height == frameHeight);
+  loadMask("masks/mask.png");
 
   drawImage.allocate(frameWidth, frameHeight, OF_IMAGE_COLOR);
 
   inputPixels = new unsigned char[frameCount * frameWidth * frameHeight * 3];
   inputPixelsStartIndex = -1;
+
+  isShowingMask = false;
+  isShowingInset = true;
+  isMirrored = false;
+
+  insetScale = 0.12;
 }
 
 void ofApp::update(){
@@ -51,17 +55,66 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
-  if (drawImage.isAllocated()) {
-    drawImage.draw(screenWidth, 0, -screenWidth, screenHeight);
+  if (!maskImage.isAllocated() || !drawImage.isAllocated()) return;
+
+  ofImage mainImage;
+  ofImage insetImage;
+
+  if (isShowingMask) {
+    mainImage = maskImage;
+    insetImage = drawImage;
+  }
+  else {
+    mainImage = drawImage;
+    insetImage = maskImage;
+  }
+
+  if (isMirrored) {
+    mainImage.draw(screenWidth, 0, -screenWidth, screenHeight);
+    if (isShowingInset) {
+      drawInsetBackground();
+      insetImage.draw(10 + screenWidth * insetScale, 10, -screenWidth * insetScale, screenHeight * insetScale);
+    }
+  }
+  else {
+    mainImage.draw(0, 0, screenWidth, screenHeight);
+    if (isShowingInset) {
+      drawInsetBackground();
+      insetImage.draw(10, 10, screenWidth * insetScale, screenHeight * insetScale);
+    }
   }
 }
 
-void ofApp::keyPressed(int key){
+void ofApp::drawInsetBackground() {
+  ofSetColor(128);
+  ofRect(9, 9, screenWidth * insetScale + 2, screenHeight * insetScale + 2);
+}
 
+void ofApp::loadMask(string filename) {
+  maskImage.loadImage(filename);
+  if (maskImage.type != OF_IMAGE_GRAYSCALE) {
+      colorImg.setFromPixels(maskImage.getPixels(), maskImage.width, maskImage.height);
+      grayscaleImg.allocate(maskImage.width, maskImage.height);
+      grayscaleImg = colorImg;
+      maskImage.setFromPixels(grayscaleImg.getPixels(), grayscaleImg.width, grayscaleImg.height, OF_IMAGE_GRAYSCALE);
+  }
+  maskImage.resize(frameWidth, frameHeight);
+}
+
+void ofApp::keyPressed(int key){
 }
 
 void ofApp::keyReleased(int key){
   switch (key) {
+    case 'm':
+      isMirrored = !isMirrored;
+      break;
+    case 't':
+      isShowingMask = !isShowingMask;
+      break;
+    case 'i':
+      isShowingInset = !isShowingInset;
+      break;
     case 'r':
       ofSaveFrame();
       break;
@@ -98,12 +151,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
         vector<string> tokens = ofSplitString(filename, ".");
         string extension = tokens[tokens.size() - 1];
         if (extension == "bmp" || extension == "jpg" || extension == "png") {
-            maskImage.loadImage(filename);
-            colorImg.setFromPixels(maskImage.getPixels(), maskImage.width, maskImage.height);
-            grayscaleImg.allocate(maskImage.width, maskImage.height);
-            grayscaleImg = colorImg;
-            maskImage.setFromPixels(grayscaleImg.getPixels(), grayscaleImg.width, grayscaleImg.height, OF_IMAGE_GRAYSCALE);
-            maskImage.resize(frameWidth, frameHeight);
+          loadMask(filename);
         }
     }
 }

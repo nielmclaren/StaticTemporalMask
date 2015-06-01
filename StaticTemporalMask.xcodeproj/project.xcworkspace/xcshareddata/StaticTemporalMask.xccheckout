@@ -22,7 +22,7 @@
 		<key>482C0C79002299F7F70E95DC2FD2C395D4ACE97F</key>
 		<string>../..</string>
 		<key>F477E52075B09F975A1F455542C246CE19C19CA2</key>
-		<string>../../../../../addons/ofxMacamPs3Eye</string>
+		<string>../../../addons/ofxMacamPs3Eye</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:danielgm/StaticTemporalMask.git</string>
