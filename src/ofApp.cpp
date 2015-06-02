@@ -32,12 +32,6 @@ void ofApp::update(){
   if (videoGrabber.isFrameNew()) {
     if (++inputPixelsStartIndex >= frameCount) inputPixelsStartIndex = 0;
 
-    unsigned char* p = inputPixels + inputPixelsStartIndex * frameWidth * frameHeight * 3;
-    memcpy(
-        p,
-        videoGrabber.getPixels(),
-        frameWidth * frameHeight * 3);
-
     for (int x = 0; x < frameWidth; x++) {
       for (int y = 0; y < frameHeight; y++) {
         int i = y * frameWidth + x;
@@ -51,6 +45,9 @@ void ofApp::update(){
       }
     }
     drawImage.update();
+
+    unsigned char* p = inputPixels + inputPixelsStartIndex * frameWidth * frameHeight * 3;
+    memcpy(p, videoGrabber.getPixels(), frameWidth * frameHeight * 3);
   }
 }
 

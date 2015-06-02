@@ -32,7 +32,7 @@ class ofApp : public ofBaseApp{
     int screenWidth;
     int screenHeight;
 
-    /*
+    //*
     ofxMacamPs3Eye videoGrabber;
     /*/
     ofVideoGrabber videoGrabber;
