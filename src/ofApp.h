@@ -4,6 +4,7 @@
 
 #include "ofxOpenCv.h"
 #include "ofxMacamPs3Eye.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -12,8 +13,11 @@ class ofApp : public ofBaseApp{
     void update();
     void draw();
 
+    void loadMask();
     void loadMask(string filename);
     void drawInsetBackground();
+    void loadXmlSettings();
+    void saveXmlSettings();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -26,6 +30,9 @@ class ofApp : public ofBaseApp{
     void gotMessage(ofMessage msg);
 
   private:
+    std::vector<string> maskPaths;
+    int maskIndex;
+
     int frameCount;
     int frameWidth;
     int frameHeight;

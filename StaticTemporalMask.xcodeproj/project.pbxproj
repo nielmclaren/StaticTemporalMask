@@ -25,6 +25,10 @@
 		1C4A3A8A1B0EFEB3001066F6 /* Sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A3A6C1B0EFEB3001066F6 /* Sensor.mm */; };
 		1C4A3A8B1B0EFEB3001066F6 /* ofxMacamPs3Eye.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A3A6E1B0EFEB3001066F6 /* ofxMacamPs3Eye.mm */; };
 		1C4A3A8C1B0EFEB3001066F6 /* PS3EyeWindowAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A3A701B0EFEB3001066F6 /* PS3EyeWindowAppDelegate.mm */; };
+		1C71223A1B1EA23800B577F6 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7122331B1EA23800B577F6 /* tinyxml.cpp */; };
+		1C71223B1B1EA23800B577F6 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7122351B1EA23800B577F6 /* tinyxmlerror.cpp */; };
+		1C71223C1B1EA23800B577F6 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7122361B1EA23800B577F6 /* tinyxmlparser.cpp */; };
+		1C71223D1B1EA23800B577F6 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C7122381B1EA23800B577F6 /* ofxXmlSettings.cpp */; };
 		1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C76DE5C29BDBD2CAA1DD0021 /* ofxCvContourFinder.cpp */; };
 		250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9C7160245B19131DAE6128 /* ofxCvColorImage.cpp */; };
 		63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6151136D101F857DAE12722 /* ofxCvImage.cpp */; };
@@ -126,6 +130,12 @@
 		1C4A3A6E1B0EFEB3001066F6 /* ofxMacamPs3Eye.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxMacamPs3Eye.mm; sourceTree = "<group>"; };
 		1C4A3A6F1B0EFEB3001066F6 /* PS3EyeWindowAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PS3EyeWindowAppDelegate.h; sourceTree = "<group>"; };
 		1C4A3A701B0EFEB3001066F6 /* PS3EyeWindowAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PS3EyeWindowAppDelegate.mm; sourceTree = "<group>"; };
+		1C7122331B1EA23800B577F6 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		1C7122341B1EA23800B577F6 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		1C7122351B1EA23800B577F6 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		1C7122361B1EA23800B577F6 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		1C7122381B1EA23800B577F6 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		1C7122391B1EA23800B577F6 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		1E95EFD35ED9C5D97F2F015E /* timer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = timer.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/timer.h; sourceTree = SOURCE_ROOT; };
 		2E411F99E3AB7154484B4F96 /* kmeans_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = kmeans_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/kmeans_index.h; sourceTree = SOURCE_ROOT; };
 		30884ECD9C171AB1B1BDFC3F /* cv.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = cv.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/cv.hpp; sourceTree = SOURCE_ROOT; };
@@ -383,6 +393,36 @@
 			path = include;
 			sourceTree = "<group>";
 		};
+		1C7122311B1EA23800B577F6 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				1C7122321B1EA23800B577F6 /* libs */,
+				1C7122371B1EA23800B577F6 /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../../openFrameworks/addons/ofxXmlSettings;
+			sourceTree = "<group>";
+		};
+		1C7122321B1EA23800B577F6 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				1C7122331B1EA23800B577F6 /* tinyxml.cpp */,
+				1C7122341B1EA23800B577F6 /* tinyxml.h */,
+				1C7122351B1EA23800B577F6 /* tinyxmlerror.cpp */,
+				1C7122361B1EA23800B577F6 /* tinyxmlparser.cpp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		1C7122371B1EA23800B577F6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1C7122381B1EA23800B577F6 /* ofxXmlSettings.cpp */,
+				1C7122391B1EA23800B577F6 /* ofxXmlSettings.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		1E45F8C3CCFF6847BFF957AA /* flann */ = {
 			isa = PBXGroup;
 			children = (
@@ -540,6 +580,7 @@
 			children = (
 				1C4A3A051B0EFEB2001066F6 /* ofxMacamPs3Eye */,
 				A0B90D3B0ADB9C1716816714 /* ofxOpenCv */,
+				1C7122311B1EA23800B577F6 /* ofxXmlSettings */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -776,17 +817,21 @@
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
 				1C4A3A7E1B0EFEB3001066F6 /* ControllerInterface.mm in Sources */,
 				1C4A3A861B0EFEB3001066F6 /* MyCameraDriver.mm in Sources */,
+				1C71223C1B1EA23800B577F6 /* tinyxmlparser.cpp in Sources */,
 				1C4A3A811B0EFEB3001066F6 /* Histogram.mm in Sources */,
 				1C4A3A891B0EFEB3001066F6 /* Resolvers.cpp in Sources */,
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
+				1C71223B1B1EA23800B577F6 /* tinyxmlerror.cpp in Sources */,
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
 				1C4A3A871B0EFEB3001066F6 /* MyCameraInfo.mm in Sources */,
 				1C4A3A831B0EFEB3001066F6 /* MiniGraphicsTools.cpp in Sources */,
+				1C71223D1B1EA23800B577F6 /* ofxXmlSettings.cpp in Sources */,
 				1C4A3A821B0EFEB3001066F6 /* LookUpTable.mm in Sources */,
 				1C4A3A7D1B0EFEB3001066F6 /* BayerConverter.mm in Sources */,
 				1C4A3A7F1B0EFEB3001066F6 /* FrameCounter.mm in Sources */,
+				1C71223A1B1EA23800B577F6 /* tinyxml.cpp in Sources */,
 				1C4A3A8A1B0EFEB3001066F6 /* Sensor.mm in Sources */,
 				1C4A3A801B0EFEB3001066F6 /* GenericDriver.mm in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,

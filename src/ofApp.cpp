@@ -13,8 +13,6 @@ void ofApp::setup(){
   videoGrabber.setDeviceID(0);
   videoGrabber.initGrabber(frameWidth, frameHeight, false);
 
-  loadMask("masks/mask.png");
-
   drawImage.allocate(frameWidth, frameHeight, OF_IMAGE_COLOR);
 
   inputPixels = new unsigned char[frameCount * frameWidth * frameHeight * 3];
@@ -25,6 +23,11 @@ void ofApp::setup(){
   isMirrored = false;
 
   insetScale = 0.12;
+
+  loadXmlSettings();
+
+  maskIndex = 0;
+  loadMask();
 }
 
 void ofApp::update(){
@@ -87,6 +90,10 @@ void ofApp::drawInsetBackground() {
   ofRect(9, 9, screenWidth * insetScale + 2, screenHeight * insetScale + 2);
 }
 
+void ofApp::loadMask() {
+  loadMask(maskPaths[maskIndex]);
+}
+
 void ofApp::loadMask(string filename) {
   maskImage.loadImage(filename);
   if (maskImage.type != OF_IMAGE_GRAYSCALE) {
@@ -96,6 +103,47 @@ void ofApp::loadMask(string filename) {
       maskImage.setFromPixels(grayscaleImg.getPixels(), grayscaleImg.width, grayscaleImg.height, OF_IMAGE_GRAYSCALE);
   }
   maskImage.resize(frameWidth, frameHeight);
+}
+
+void ofApp::loadXmlSettings() {
+  ofxXmlSettings settings;
+  settings.loadFile("settings.xml");
+
+  settings.pushTag("settings");
+  settings.pushTag("masks");
+
+  maskPaths.clear();
+
+  int numMasks = settings.getNumTags("mask");
+  for (int i = 0; i < numMasks; i++) {
+    string path = settings.getAttribute("mask", "path", "", i);
+    maskPaths.push_back(path);
+  }
+
+  settings.popTag(); // masks
+  settings.popTag(); // settings
+}
+
+void ofApp::saveXmlSettings() {
+  ofxXmlSettings settings;
+
+  settings.addTag("settings");
+  settings.pushTag("settings");
+
+  settings.addTag("masks");
+  settings.pushTag("masks");
+
+  int numMasks = maskPaths.size();
+  for (int i = 0; i < numMasks; i++) {
+    settings.addTag("mask");
+    settings.setAttribute("mask", "path", maskPaths[i], i);
+  }
+
+  settings.popTag(); // masks
+
+  settings.popTag(); // settings
+
+  settings.saveFile("settings.xml");
 }
 
 void ofApp::keyPressed(int key){
@@ -114,6 +162,17 @@ void ofApp::keyReleased(int key){
       break;
     case 'r':
       ofSaveFrame();
+      break;
+    case 's':
+      saveXmlSettings();
+      break;
+    case 'n':
+      if (++maskIndex >= maskPaths.size()) maskIndex = 0;
+      loadMask();
+      break;
+    case 'b':
+      if (--maskIndex < 0) maskIndex = maskPaths.size() - 1;
+      loadMask();
       break;
   }
 }
