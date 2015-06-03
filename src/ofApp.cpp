@@ -26,7 +26,7 @@ void ofApp::setup(){
 
   loadXmlSettings();
 
-  maskIndex = 0;
+  maskIndex = floor(ofRandom(maskPaths.size()));
   loadMask();
 
   duration = 5000;

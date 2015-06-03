@@ -1,6 +1,7 @@
 <settings>
     <masks>
         <mask path="processing_masks/grid_diamond_random_3.png"></mask>
+        <mask path="processing_masks/export0006.png"></mask>
         <mask path="processing_masks/alt_gradient_rows_12.png"></mask>
         <mask path="processing_masks/grid_circles_overlap_12.png"></mask>
         <mask path="processing_masks/concentric_circles_stepped_8.png"></mask>
@@ -10,6 +11,7 @@
         <mask path="processing_masks/grid_circles_overlap_5.png"></mask>
         <mask path="processing_masks/concentric_stepped_circles13.png"></mask>
         <mask path="processing_masks/grid_diamond_steps_14.png"></mask>
+        <mask path="processing_masks/export0007.png"></mask>
         <mask path="processing_masks/grid_squares_11.png"></mask>
         <mask path="processing_masks/grid_concentric_stepped_circles_overlap_3.png"></mask>
         <mask path="processing_masks/alt_gradient_cols_14.png"></mask>
@@ -24,6 +26,7 @@
         <mask path="processing_masks/altx_gradient_rows_7.png"></mask>
         <mask path="processing_masks/concentric_circles_stepped_14.png"></mask>
         <mask path="processing_masks/alt_gradient_cols_6.png"></mask>
+        <mask path="processing_masks/export0008.png"></mask>
         <mask path="processing_masks/grid_circle_steps_4.png"></mask>
         <mask path="processing_masks/altx_gradient_rows_14.png"></mask>
         <mask path="processing_masks/stepped_rows_14.png"></mask>
