@@ -28,9 +28,18 @@ void ofApp::setup(){
 
   maskIndex = 0;
   loadMask();
+
+  duration = 5000;
+  prevTime = ofGetElapsedTimeMillis();
 }
 
 void ofApp::update(){
+  unsigned long long now = ofGetElapsedTimeMillis();
+  if (now > prevTime + duration) {
+    prevTime = now;
+    loadNextMask();
+  }
+
   videoGrabber.update();
   if (videoGrabber.isFrameNew()) {
     if (++inputPixelsStartIndex >= frameCount) inputPixelsStartIndex = 0;
@@ -92,6 +101,16 @@ void ofApp::drawInsetBackground() {
 
 void ofApp::loadMask() {
   loadMask(maskPaths[maskIndex]);
+}
+
+void ofApp::loadNextMask() {
+  if (++maskIndex >= maskPaths.size()) maskIndex = 0;
+  loadMask();
+}
+
+void ofApp::loadPrevMask() {
+  if (--maskIndex < 0) maskIndex = maskPaths.size() - 1;
+  loadMask();
 }
 
 void ofApp::loadMask(string filename) {
@@ -167,12 +186,10 @@ void ofApp::keyReleased(int key){
       saveXmlSettings();
       break;
     case 'n':
-      if (++maskIndex >= maskPaths.size()) maskIndex = 0;
-      loadMask();
+      loadNextMask();
       break;
     case 'b':
-      if (--maskIndex < 0) maskIndex = maskPaths.size() - 1;
-      loadMask();
+      loadPrevMask();
       break;
   }
 }

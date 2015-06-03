@@ -14,6 +14,8 @@ class ofApp : public ofBaseApp{
     void draw();
 
     void loadMask();
+    void loadNextMask();
+    void loadPrevMask();
     void loadMask(string filename);
     void drawInsetBackground();
     void loadXmlSettings();
@@ -59,4 +61,7 @@ class ofApp : public ofBaseApp{
     bool isMirrored;
 
     float insetScale;
+
+    long duration;
+    unsigned long long prevTime;
 };
