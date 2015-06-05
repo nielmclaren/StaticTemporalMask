@@ -73,6 +73,7 @@ class ofApp : public ofBaseApp{
     ofImage maskImage;
     ofImage drawImage;
 
+    bool isFullscreen;
     bool isShowingHud;
     bool isShowingMask;
     bool isShowingInset;

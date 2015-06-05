@@ -18,6 +18,7 @@ void ofApp::setup() {
   inputPixels = new unsigned char[frameCount * frameWidth * frameHeight * 3];
   inputPixelsStartIndex = -1;
 
+  isFullscreen = true;
   isShowingHud = true;
   isShowingMask = false;
   isShowingInset = true;
@@ -114,6 +115,7 @@ void ofApp::draw() {
     stringstream ss;
     ss << "      Frame rate: " << ofToString(ofGetFrameRate(), 2) << endl
       << "      WebSocket server: " << (isServerSetup ? ipAddress : "failed") << endl
+      << " (F)  Fullscreen: " << (isFullscreen ? "true" : "false") << endl
       << " (H)  HUD: true" << endl
       << " (T)  Display: " << (isShowingMask ? "mask" : "output") << endl
       << " (M)  Mirror: " << (isMirrored ? "true" : "false") << endl
@@ -173,6 +175,7 @@ void ofApp::loadXmlSettings() {
   ofxXmlSettings settings;
   settings.loadFile("settings.xml");
 
+  isFullscreen = getBooleanAttribute(settings, "isFullscreen", isFullscreen);
   isShowingHud = getBooleanAttribute(settings, "isShowingHud", isShowingHud);
   isMirrored = getBooleanAttribute(settings, "isMirrored", isMirrored);
   isShowingMask = getBooleanAttribute(settings, "isShowingMask", isShowingMask);
@@ -200,6 +203,7 @@ void ofApp::saveXmlSettings() {
 
   settings.addTag("settings");
 
+  settings.setAttribute("settings", "isFullscreen", isFullscreen ? "true" : "false", 0);
   settings.setAttribute("settings", "isShowingHud", isShowingHud ? "true" : "false", 0);
   settings.setAttribute("settings", "isMirrored", isMirrored ? "true" : "false", 0);
   settings.setAttribute("settings", "isShowingMask", isShowingMask ? "true" : "false", 0);
@@ -226,7 +230,12 @@ void ofApp::saveXmlSettings() {
 }
 
 void ofApp::handleCommand(string command) {
-  if (command == "toggleHud") {
+  if (command == "toggleFullscreen") {
+    isFullscreen = !isFullscreen;
+    ofSetFullscreen(isFullscreen);
+    saveXmlSettings();
+  }
+  else if (command == "toggleHud") {
     isShowingHud = !isShowingHud;
     saveXmlSettings();
   }
@@ -275,6 +284,7 @@ void ofApp::keyPressed(int key) {
 
 void ofApp::keyReleased(int key) {
   switch (key) {
+    case 'f': handleCommand("toggleFullscreen"); break;
     case 'h': handleCommand("toggleHud"); break;
     case 'm': handleCommand("toggleMirrored"); break;
     case 't': handleCommand("toggleMask"); break;
