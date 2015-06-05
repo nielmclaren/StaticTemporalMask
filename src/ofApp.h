@@ -90,8 +90,5 @@ class ofApp : public ofBaseApp{
     vector<string> commands;
     vector<string> messages;
 
-    //string to send to clients
-    string toSend;
-
     string ipAddress;
 };
