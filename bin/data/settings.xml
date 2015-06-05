@@ -1,4 +1,4 @@
-<settings isShowingHud="false" isMirrored="true" isShowingMask="false" isShowingInset="false" isAutoAdvancing="false" duration="30000.000000">
+<settings isShowingHud="true" isMirrored="true" isShowingMask="false" isShowingInset="true" isAutoAdvancing="false" duration="30000.000000">
     <masks>
         <mask path="processing_masks/grid_diamond_random_3.png"></mask>
         <mask path="processing_masks/export0006.png"></mask>

@@ -90,6 +90,7 @@ void ofApp::draw() {
     insetImage = maskImage;
   }
 
+  ofSetColor(255);
   if (isMirrored) {
     mainImage.draw(screenWidth, 0, -screenWidth, screenHeight);
     if (isShowingInset) {
