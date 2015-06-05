@@ -2,9 +2,14 @@
 
 #include "ofMain.h"
 
-#include "ofxOpenCv.h"
+#include "ofxLibwebsockets.h"
 #include "ofxMacamPs3Eye.h"
+#include "ofxOpenCv.h"
 #include "ofxXmlSettings.h"
+
+#include "LocalAddressGrabber.h"
+
+#define NUM_MESSAGES 30 // how many past messages we want to keep
 
 class ofApp : public ofBaseApp{
 
@@ -20,6 +25,7 @@ class ofApp : public ofBaseApp{
     void drawInsetBackground();
     void loadXmlSettings();
     void saveXmlSettings();
+    void handleCommand(string message);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -31,6 +37,14 @@ class ofApp : public ofBaseApp{
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    // Websocket methods.
+    void onConnect(ofxLibwebsockets::Event& args);
+    void onOpen(ofxLibwebsockets::Event& args);
+    void onClose(ofxLibwebsockets::Event& args);
+    void onIdle(ofxLibwebsockets::Event& args);
+    void onMessage(ofxLibwebsockets::Event& args);
+    void onBroadcast(ofxLibwebsockets::Event& args);
+
   private:
     std::vector<string> maskPaths;
     int maskIndex;
@@ -40,6 +54,8 @@ class ofApp : public ofBaseApp{
     int frameHeight;
     int screenWidth;
     int screenHeight;
+
+    ofTrueTypeFont hudFont;
 
     //*
     ofxMacamPs3Eye videoGrabber;
@@ -56,12 +72,26 @@ class ofApp : public ofBaseApp{
     ofImage maskImage;
     ofImage drawImage;
 
+    bool isShowingHud;
     bool isShowingMask;
     bool isShowingInset;
     bool isMirrored;
+    bool isAutoAdvancing;
 
     float insetScale;
 
     long duration;
-    unsigned long long prevTime;
+    unsigned long long prevLoadMaskTime;
+
+    ofxLibwebsockets::Server server;
+
+    bool isServerSetup;
+
+    vector<string> commands;
+    vector<string> messages;
+
+    //string to send to clients
+    string toSend;
+
+    string ipAddress;
 };

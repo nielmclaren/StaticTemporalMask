@@ -1,13 +1,13 @@
 #include "ofApp.h"
 
-void ofApp::setup(){
-  ofSetLogLevel(OF_LOG_VERBOSE);
-
+void ofApp::setup() {
   frameCount = 128;
   frameWidth = 640;
   frameHeight = 480;
   screenWidth = ofGetWindowWidth();
   screenHeight = ofGetWindowHeight();
+
+  hudFont.loadFont("InputMono-Regular.ttf", 12);
 
   videoGrabber.setVerbose(true);
   videoGrabber.setDeviceID(0);
@@ -18,9 +18,11 @@ void ofApp::setup(){
   inputPixels = new unsigned char[frameCount * frameWidth * frameHeight * 3];
   inputPixelsStartIndex = -1;
 
+  isShowingHud = true;
   isShowingMask = false;
   isShowingInset = true;
   isMirrored = false;
+  isAutoAdvancing = true;
 
   insetScale = 0.12;
 
@@ -29,14 +31,19 @@ void ofApp::setup(){
   maskIndex = floor(ofRandom(maskPaths.size()));
   loadMask();
 
-  duration = 5000;
-  prevTime = ofGetElapsedTimeMillis();
+  duration = 30000;
+  prevLoadMaskTime = ofGetElapsedTimeMillis();
+
+  isServerSetup = server.setup(9092);
+  server.addListener(this);
+
+  LocalAddressGrabber localAddressGrabber;
+  ipAddress = localAddressGrabber.getIpAddress();
 }
 
-void ofApp::update(){
+void ofApp::update() {
   unsigned long long now = ofGetElapsedTimeMillis();
-  if (now > prevTime + duration) {
-    prevTime = now;
+  if (isAutoAdvancing && now > prevLoadMaskTime + duration) {
     loadNextMask();
   }
 
@@ -61,9 +68,14 @@ void ofApp::update(){
     unsigned char* p = inputPixels + inputPixelsStartIndex * frameWidth * frameHeight * 3;
     memcpy(p, videoGrabber.getPixels(), frameWidth * frameHeight * 3);
   }
+
+  for (int i = 0; i < commands.size(); i++) {
+    handleCommand(commands[i]);
+  }
+  commands.clear();
 }
 
-void ofApp::draw(){
+void ofApp::draw() {
   if (!maskImage.isAllocated() || !drawImage.isAllocated()) return;
 
   ofImage mainImage;
@@ -82,25 +94,48 @@ void ofApp::draw(){
     mainImage.draw(screenWidth, 0, -screenWidth, screenHeight);
     if (isShowingInset) {
       drawInsetBackground();
-      insetImage.draw(10 + screenWidth * insetScale, 10, -screenWidth * insetScale, screenHeight * insetScale);
+      insetImage.draw(
+          screenWidth * (1 - insetScale) - 20, 10,
+          -screenWidth * insetScale, screenHeight * insetScale);
     }
   }
   else {
     mainImage.draw(0, 0, screenWidth, screenHeight);
     if (isShowingInset) {
       drawInsetBackground();
-      insetImage.draw(10, 10, screenWidth * insetScale, screenHeight * insetScale);
+      insetImage.draw(
+          screenWidth * (1 - insetScale) - 10, 10,
+          screenWidth * insetScale, screenHeight * insetScale);
     }
+  }
+
+  if (isShowingHud) {
+    stringstream ss;
+    ss << "      Frame rate: " << ofToString(ofGetFrameRate(), 2) << endl
+      << "      WebSocket server: " << (isServerSetup ? ipAddress : "failed") << endl
+      << " (H)  HUD: true" << endl
+      << " (T)  Display: " << (isShowingMask ? "mask" : "output") << endl
+      << " (M)  Mirror: " << (isMirrored ? "true" : "false") << endl
+      << " (I)  Inset: " << (isShowingInset ? "true" : "false") << endl
+      << " (A)  Auto-advance: " << (isAutoAdvancing ? "true" : "false") << endl
+      << "([/]) Duration: " << duration << " ms" << endl
+      << " (B)  Prev Frame" << endl
+      << " (N)  Next Frame" << endl
+      << " (R)  Save Frame" << endl;
+
+    ss << endl;
+    for (int i = 0; i < messages.size(); i++) {
+      ss << messages[i] << endl;
+    }
+
+    hudFont.drawString(ss.str(), 14, 30);
+    ss.str(std::string());
   }
 }
 
 void ofApp::drawInsetBackground() {
   ofSetColor(128);
-  ofRect(9, 9, screenWidth * insetScale + 2, screenHeight * insetScale + 2);
-}
-
-void ofApp::loadMask() {
-  loadMask(maskPaths[maskIndex]);
+  ofRect(screenWidth * (1 - insetScale) - 11, 9, screenWidth * insetScale + 2, screenHeight * insetScale + 2);
 }
 
 void ofApp::loadNextMask() {
@@ -113,6 +148,10 @@ void ofApp::loadPrevMask() {
   loadMask();
 }
 
+void ofApp::loadMask() {
+  loadMask(maskPaths[maskIndex]);
+}
+
 void ofApp::loadMask(string filename) {
   maskImage.loadImage(filename);
   if (maskImage.type != OF_IMAGE_GRAYSCALE) {
@@ -122,6 +161,8 @@ void ofApp::loadMask(string filename) {
       maskImage.setFromPixels(grayscaleImg.getPixels(), grayscaleImg.width, grayscaleImg.height, OF_IMAGE_GRAYSCALE);
   }
   maskImage.resize(frameWidth, frameHeight);
+
+  prevLoadMaskTime = ofGetElapsedTimeMillis();
 }
 
 void ofApp::loadXmlSettings() {
@@ -165,11 +206,23 @@ void ofApp::saveXmlSettings() {
   settings.saveFile("settings.xml");
 }
 
-void ofApp::keyPressed(int key){
+void ofApp::handleCommand(string command) {
+  if (command == "prevMask") {
+    loadPrevMask();
+  }
+  else if (command == "nextMask") {
+    loadNextMask();
+  }
 }
 
-void ofApp::keyReleased(int key){
+void ofApp::keyPressed(int key) {
+}
+
+void ofApp::keyReleased(int key) {
   switch (key) {
+    case 'h':
+      isShowingHud = !isShowingHud;
+      break;
     case 'm':
       isMirrored = !isMirrored;
       break;
@@ -178,6 +231,10 @@ void ofApp::keyReleased(int key){
       break;
     case 'i':
       isShowingInset = !isShowingInset;
+      break;
+    case 'a':
+      isAutoAdvancing = !isAutoAdvancing;
+      prevLoadMaskTime = ofGetElapsedTimeMillis();
       break;
     case 'r':
       ofSaveFrame();
@@ -191,40 +248,88 @@ void ofApp::keyReleased(int key){
     case 'b':
       loadPrevMask();
       break;
+    case '[':
+      duration -= 2500;
+      if (duration < 2500) duration = 2500;
+      break;
+    case ']':
+      duration += 2500;
+      break;
   }
 }
 
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 
 }
 
-void ofApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h) {
 
 }
 
-void ofApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 void ofApp::dragEvent(ofDragInfo dragInfo) {
-    for (int i = 0; i < dragInfo.files.size(); i++) {
-        string filename = dragInfo.files[i];
-        vector<string> tokens = ofSplitString(filename, ".");
-        string extension = tokens[tokens.size() - 1];
-        if (extension == "bmp" || extension == "jpg" || extension == "png") {
-          loadMask(filename);
-        }
+  for (int i = 0; i < dragInfo.files.size(); i++) {
+    string filename = dragInfo.files[i];
+    vector<string> tokens = ofSplitString(filename, ".");
+    string extension = tokens[tokens.size() - 1];
+    if (extension == "bmp" || extension == "jpg" || extension == "png") {
+      loadMask(filename);
     }
+  }
+}
+
+void ofApp::onConnect(ofxLibwebsockets::Event& args) {
+  cout << "on connected" << endl;
+}
+
+void ofApp::onOpen(ofxLibwebsockets::Event& args) {
+  cout << "new connection open" << endl;
+  messages.push_back("New connection from " + args.conn.getClientIP() + ", " + args.conn.getClientName());
+}
+
+void ofApp::onClose(ofxLibwebsockets::Event& args) {
+  cout << "on close" << endl;
+  messages.push_back("Connection closed");
+}
+
+void ofApp::onIdle(ofxLibwebsockets::Event& args) {
+  cout << "on idle" << endl;
+}
+
+void ofApp::onMessage(ofxLibwebsockets::Event& args) {
+  cout << "got message '" << args.message << "'" << endl;
+
+  // trace out string messages or JSON messages!
+  if (!args.json.isNull()) {
+    messages.push_back("New message: " + args.json.toStyledString() + " from " + args.conn.getClientName());
+  }
+  else {
+    messages.push_back("New message: " + args.message + " from " + args.conn.getClientName());
+  }
+
+  if (messages.size() > NUM_MESSAGES) messages.erase(messages.begin());
+
+  // echo server = send message right back!
+  args.conn.send(args.message);
+
+  commands.push_back(args.message);
+}
+
+void ofApp::onBroadcast(ofxLibwebsockets::Event& args) {
+  cout << "got broadcast " << args.message << endl;
 }

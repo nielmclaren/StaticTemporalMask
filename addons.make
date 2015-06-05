@@ -1,1 +1,4 @@
 ofxOpenCv
+ofxXmlSettings
+ofxLibwebsockets
+ofxMacamPs3Eye
