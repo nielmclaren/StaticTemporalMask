@@ -26,6 +26,7 @@ class ofApp : public ofBaseApp{
     void loadXmlSettings();
     void saveXmlSettings();
     void handleCommand(string message);
+    bool getBooleanAttribute(ofxXmlSettings settings, string attributeName, bool defaultValue);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -80,7 +81,7 @@ class ofApp : public ofBaseApp{
 
     float insetScale;
 
-    long duration;
+    double duration;
     unsigned long long prevLoadMaskTime;
 
     ofxLibwebsockets::Server server;

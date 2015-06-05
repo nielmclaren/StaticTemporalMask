@@ -95,7 +95,7 @@ void ofApp::draw() {
     if (isShowingInset) {
       drawInsetBackground();
       insetImage.draw(
-          screenWidth * (1 - insetScale) - 20, 10,
+          screenWidth - 10, 10,
           -screenWidth * insetScale, screenHeight * insetScale);
     }
   }
@@ -121,7 +121,9 @@ void ofApp::draw() {
       << "([/]) Duration: " << duration << " ms" << endl
       << " (B)  Prev Frame" << endl
       << " (N)  Next Frame" << endl
-      << " (R)  Save Frame" << endl;
+      << " (R)  Save Frame" << endl
+      << " (L)  Load Settings" << endl
+      << " (S)  Save Settings" << endl;
 
     ss << endl;
     for (int i = 0; i < messages.size(); i++) {
@@ -169,6 +171,13 @@ void ofApp::loadXmlSettings() {
   ofxXmlSettings settings;
   settings.loadFile("settings.xml");
 
+  isShowingHud = getBooleanAttribute(settings, "isShowingHud", isShowingHud);
+  isMirrored = getBooleanAttribute(settings, "isMirrored", isMirrored);
+  isShowingMask = getBooleanAttribute(settings, "isShowingMask", isShowingMask);
+  isShowingInset = getBooleanAttribute(settings, "isShowingInset", isShowingInset);
+  isAutoAdvancing = getBooleanAttribute(settings, "isAutoAdvancing", isAutoAdvancing);
+  duration = settings.getAttribute("settings", "duration", duration);
+
   settings.pushTag("settings");
   settings.pushTag("masks");
 
@@ -188,6 +197,14 @@ void ofApp::saveXmlSettings() {
   ofxXmlSettings settings;
 
   settings.addTag("settings");
+
+  settings.setAttribute("settings", "isShowingHud", isShowingHud ? "true" : "false", 0);
+  settings.setAttribute("settings", "isMirrored", isMirrored ? "true" : "false", 0);
+  settings.setAttribute("settings", "isShowingMask", isShowingMask ? "true" : "false", 0);
+  settings.setAttribute("settings", "isShowingInset", isShowingInset ? "true" : "false", 0);
+  settings.setAttribute("settings", "isAutoAdvancing", isAutoAdvancing ? "true" : "false", 0);
+  settings.setAttribute("settings", "duration", floor(duration), 0);
+
   settings.pushTag("settings");
 
   settings.addTag("masks");
@@ -207,12 +224,48 @@ void ofApp::saveXmlSettings() {
 }
 
 void ofApp::handleCommand(string command) {
-  if (command == "prevMask") {
+  if (command == "toggleHud") {
+    isShowingHud = !isShowingHud;
+    saveXmlSettings();
+  }
+  else if (command == "toggleMirrored") {
+    isMirrored = !isMirrored;
+    saveXmlSettings();
+  }
+  else if (command == "toggleMask") {
+    isShowingMask = !isShowingMask;
+    saveXmlSettings();
+  }
+  else if (command == "toggleInset") {
+    isShowingInset = !isShowingInset;
+    saveXmlSettings();
+  }
+  else if (command == "toggleAutoAdvance") {
+    isAutoAdvancing = !isAutoAdvancing;
+    saveXmlSettings();
+  }
+  else if (command == "saveFrame") {
+    ofSaveFrame();
+  }
+  else if (command == "prevMask") {
     loadPrevMask();
   }
   else if (command == "nextMask") {
     loadNextMask();
   }
+  else if (command == "decDuration") {
+    duration -= 2500;
+    if (duration < 2500) duration = 2500;
+    saveXmlSettings();
+  }
+  else if (command == "incDuration") {
+    duration += 2500;
+    saveXmlSettings();
+  }
+}
+
+bool ofApp::getBooleanAttribute(ofxXmlSettings settings, string attributeName, bool defaultValue) {
+  return settings.getAttribute("settings", attributeName, defaultValue ? "true" : "false", 0) != "false";
 }
 
 void ofApp::keyPressed(int key) {
@@ -220,40 +273,18 @@ void ofApp::keyPressed(int key) {
 
 void ofApp::keyReleased(int key) {
   switch (key) {
-    case 'h':
-      isShowingHud = !isShowingHud;
-      break;
-    case 'm':
-      isMirrored = !isMirrored;
-      break;
-    case 't':
-      isShowingMask = !isShowingMask;
-      break;
-    case 'i':
-      isShowingInset = !isShowingInset;
-      break;
-    case 'a':
-      isAutoAdvancing = !isAutoAdvancing;
-      prevLoadMaskTime = ofGetElapsedTimeMillis();
-      break;
-    case 'r':
-      ofSaveFrame();
-      break;
-    case 's':
-      saveXmlSettings();
-      break;
-    case 'n':
-      loadNextMask();
-      break;
-    case 'b':
-      loadPrevMask();
-      break;
-    case '[':
-      duration -= 2500;
-      if (duration < 2500) duration = 2500;
-      break;
-    case ']':
-      duration += 2500;
+    case 'h': handleCommand("toggleHud"); break;
+    case 'm': handleCommand("toggleMirrored"); break;
+    case 't': handleCommand("toggleMask"); break;
+    case 'i': handleCommand("toggleInset"); break;
+    case 'a': handleCommand("toggleAutoAdvance"); break;
+    case 'r': handleCommand("saveFrame"); break;
+    case 'n': handleCommand("nextMask"); break;
+    case 'b': handleCommand("prevMask"); break;
+    case '[': handleCommand("decDuration"); break;
+    case ']': handleCommand("incDuration"); break;
+    case 'l':
+      loadXmlSettings();
       break;
   }
 }
