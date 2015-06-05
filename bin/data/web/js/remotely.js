@@ -3,13 +3,9 @@ var socket;
 $(document).ready(function() {
   setupSocket();
 
-  $('#prevMaskButton').click(function() {
-    console.log('prev');
-    socket.send('prevMask');
-  });
-  $('#nextMaskButton').click(function() {
-    console.log('next');
-    socket.send('nextMask');
+  $('.command-button').click(function() {
+    var command = $(this).attr('id').replace(/Button$/, '');
+    socket.send(command);
   });
 });
 
@@ -32,7 +28,7 @@ function setupSocket(){
     };
 
     // received message
-    socket.onmessage =function got_packet(msg) {
+    socket.onmessage = function got_packet(msg) {
       $('#messages').text(msg.data);
     };
 

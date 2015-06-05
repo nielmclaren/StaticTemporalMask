@@ -1,26 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
 <head>
-  <meta charset=utf-8 />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StaticTemporalMaskEditor Remote</title>
-  <link rel="stylesheet" href="css/reset.css" type="text/css" media="screen" charset="utf-8" />
-  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-  <script type="text/javascript" src="js/libs/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="js/utils.js"></script>
-  <script type="text/javascript" src="js/remotely.js"></script>
+  <link rel="stylesheet" href="css/foundation.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/vendor/modernizr.js"></script>
 </head>
 
 <body>
-  <div id="container">
-    <h2>StaticTemporalMaskEditor Remote</h2>
+  <div class="row">
     <div id="status"></div>
-    <button id="prevMaskButton">Prev Mask</button>
-    <button id="nextMaskButton">Next Mask</button>
     <div>
-      <h3>Messages</h3>
-      <hr />
-      <div id="messages" class="info"></div>
+      <button id="prevMaskButton" class="command-button">Prev Mask</button>
+      <button id="nextMaskButton" class="command-button">Next Mask</button>
+    </div>
+
+    <div>
+      <button id="toggleHudButton" class="command-button">Toggle HUD</button>
+      <button id="toggleMirroredButton" class="command-button">Toggle Mirrored</button>
+      <button id="toggleMaskButton" class="command-button">Toggle Mask</button>
+      <button id="toggleInsetButton" class="command-button">Toggle Inset</button>
+      <button id="toggleAutoAdvanceButton" class="command-button">Toggle Auto-Advance</button>
+      <button id="saveFrameButton" class="command-button">Save Frame</button>
+    </div>
+
+    <div>
+      <button id="decDuration" class="command-button">Dec Duration</button>
+      <button id="incDuration" class="command-button">Inc Duration</button>
+    </div>
+
+    <div>
+      <textarea id="messages"></textarea>
     </div>
   </div>
+
+  <script src="js/vendor/jquery.js"></script>
+  <script src="js/foundation.min.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+  <script type="text/javascript" src="js/utils.js"></script>
+  <script type="text/javascript" src="js/remotely.js"></script>
 </body>
 </html>
