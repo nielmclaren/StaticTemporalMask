@@ -130,6 +130,7 @@ void ofApp::draw() {
       ss << messages[i] << endl;
     }
 
+    ofSetColor(196);
     hudFont.drawString(ss.str(), 14, 30);
     ss.str(std::string());
   }
