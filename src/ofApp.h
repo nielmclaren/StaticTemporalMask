@@ -22,7 +22,6 @@ class ofApp : public ofBaseApp{
     void loadNextMask();
     void loadPrevMask();
     void loadMask(string filename);
-    void drawInsetBackground();
     void loadXmlSettings();
     void saveXmlSettings();
     void handleCommand(string message);
@@ -53,8 +52,6 @@ class ofApp : public ofBaseApp{
     int frameCount;
     int frameWidth;
     int frameHeight;
-    int screenWidth;
-    int screenHeight;
 
     ofTrueTypeFont hudFont;
 

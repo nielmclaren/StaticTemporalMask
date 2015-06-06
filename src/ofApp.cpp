@@ -4,8 +4,6 @@ void ofApp::setup() {
   frameCount = 128;
   frameWidth = 640;
   frameHeight = 480;
-  screenWidth = ofGetWindowWidth();
-  screenHeight = ofGetWindowHeight();
 
   hudFont.loadFont("InputMono-Regular.ttf", 12);
 
@@ -77,6 +75,8 @@ void ofApp::update() {
 }
 
 void ofApp::draw() {
+  ofBackground(0);
+
   if (!maskImage.isAllocated() || !drawImage.isAllocated()) return;
 
   ofImage mainImage;
@@ -91,23 +91,54 @@ void ofApp::draw() {
     insetImage = maskImage;
   }
 
+  float frameAspect = (float)frameWidth / frameHeight;
+
+  int screenWidth = ofGetWindowWidth();
+  int screenHeight = ofGetWindowHeight();
+  float screenAspect = (float)screenWidth / screenHeight;
+
+  int displayWidth;
+  int displayHeight;
+  if (frameAspect < screenAspect) {
+    displayWidth = screenHeight * frameAspect;
+    displayHeight = screenHeight;
+  }
+  else {
+    displayWidth = screenWidth;
+    displayHeight = screenWidth / frameAspect;
+  }
+
+  int marginWidth = (screenWidth - displayWidth) / 2;
+  int marginHeight = (screenHeight - displayHeight) / 2;
+
+  if (isShowingInset) {
+    ofSetColor(128);
+    ofRect(
+        marginWidth + displayWidth * (1 - insetScale) - 11, marginHeight + 9,
+        displayWidth * insetScale + 2, displayHeight * insetScale + 2);
+  }
+
   ofSetColor(255);
   if (isMirrored) {
-    mainImage.draw(screenWidth, 0, -screenWidth, screenHeight);
+    mainImage.draw(
+        marginWidth + displayWidth, marginHeight + 0,
+        -displayWidth, displayHeight);
+
     if (isShowingInset) {
-      drawInsetBackground();
       insetImage.draw(
-          screenWidth - 10, 10,
-          -screenWidth * insetScale, screenHeight * insetScale);
+          marginWidth + displayWidth - 10, marginHeight + 10,
+          -displayWidth * insetScale, displayHeight * insetScale);
     }
   }
   else {
-    mainImage.draw(0, 0, screenWidth, screenHeight);
+    mainImage.draw(
+        marginWidth + 0, marginHeight + 0,
+        displayWidth, displayHeight);
+
     if (isShowingInset) {
-      drawInsetBackground();
       insetImage.draw(
-          screenWidth * (1 - insetScale) - 10, 10,
-          screenWidth * insetScale, screenHeight * insetScale);
+          marginWidth + displayWidth * (1 - insetScale) - 10, marginHeight + 10,
+          displayWidth * insetScale, displayHeight * insetScale);
     }
   }
 
@@ -137,11 +168,6 @@ void ofApp::draw() {
     hudFont.drawString(ss.str(), 14, 30);
     ss.str(std::string());
   }
-}
-
-void ofApp::drawInsetBackground() {
-  ofSetColor(128);
-  ofRect(screenWidth * (1 - insetScale) - 11, 9, screenWidth * insetScale + 2, screenHeight * insetScale + 2);
 }
 
 void ofApp::loadNextMask() {
